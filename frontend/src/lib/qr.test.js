@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import { normalizeFmt, canRenderFmt } from './qr.js'
 
-// The QR helpers decide which scanned/typed codes the check-in feature will store: it can read
-// many symbologies but only redraw QR, so canRenderFmt is the gate, and normalizeFmt is what
+// The QR helpers decide which scanned codes the check-in feature will store: it can read more
+// symbologies than it can redraw, so canRenderFmt is the gate, and normalizeFmt is what
 // folds every spelling mlkit might report into the single token everything else compares on.
 
 describe('normalizeFmt', () => {
@@ -35,10 +35,19 @@ describe('canRenderFmt', () => {
     expect(canRenderFmt('qr')).toBe(true)
   })
 
-  it('rejects 1D and other 2D symbologies we cannot faithfully redraw', () => {
-    // These are readable by the scanner but lean-qr can't reproduce them, so a card in one of
-    // these formats must never be stored — it would display as the wrong bars at the turnstile.
-    for (const fmt of ['EAN_13', 'EAN_8', 'CODE_128', 'CODE_39', 'ITF', 'UPC_A', 'PDF_417', 'AZTEC', 'DATA_MATRIX']) {
+  it('accepts the linear barcodes lib/barcode.js redraws, in every spelling a decoder reports', () => {
+    // ML Kit says CODE_128, BarcodeDetector code_128, zxing Code128: all one card format.
+    for (const fmt of ['EAN_13', 'ean_13', 'EAN13', 'EAN_8', 'CODE_128', 'code_128', 'Code128',
+      'CODE_39', 'Code93', 'CODABAR', 'ITF', 'UPC_A', 'UPCA']) {
+      expect(canRenderFmt(fmt)).toBe(true)
+    }
+  })
+
+  it('rejects the symbologies we cannot faithfully redraw', () => {
+    // Readable by the scanner, but nothing here reproduces them, so a card in one of these
+    // formats must never be stored — it would display as the wrong code at the turnstile. UPC-E
+    // comes back from the decoders expanded to 13 digits, which would redraw as different bars.
+    for (const fmt of ['UPC_E', 'UPCE', 'PDF_417', 'AZTEC', 'DATA_MATRIX', 'ITF14', 'Code39Ext']) {
       expect(canRenderFmt(fmt)).toBe(false)
     }
   })

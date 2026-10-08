@@ -1870,6 +1870,7 @@ body.no-tabbar.resting #toast{bottom:calc(100px + var(--sab))}
    quiet-zone padding is baked in by the renderer; the plate underneath just frames it. */
 .ci-qr-plate{background:#fff;border-radius:var(--r-lg);padding:16px}
 .qr-canvas{display:block;image-rendering:pixelated;image-rendering:crisp-edges;transition:opacity var(--fast)}
+.bar-canvas{display:block;max-width:100%;image-rendering:pixelated;image-rendering:crisp-edges;transition:opacity var(--fast)}
 /* the trailing add card — a big + on a dashed outline, same footprint as a real card */
 .ci-add{
   scroll-snap-align:center;flex:0 0 100%;box-sizing:border-box;
@@ -1888,7 +1889,7 @@ body.no-tabbar.resting #toast{bottom:calc(100px + var(--sab))}
    square in the middle says "put the code here" — decoding reads the whole frame regardless. */
 .cam-wrap{position:relative;width:100%;aspect-ratio:3/4;max-height:58vh;border-radius:var(--r-lg);overflow:hidden;background:#000}
 .cam-wrap video{width:100%;height:100%;object-fit:cover;display:block}
-.cam-frame{position:absolute;inset:0;margin:auto;width:62%;aspect-ratio:1;border:2px dashed rgba(255,255,255,.75);border-radius:14px;pointer-events:none}
+.cam-frame{position:absolute;inset:0;margin:auto;width:78%;aspect-ratio:4/3;border:2px dashed rgba(255,255,255,.75);border-radius:14px;pointer-events:none}
 /* ---------------------------------------------------------------- Plan -- */
 /* Schedule | Routines (views/Plan.jsx). A settings-like page, one column at every width. */
 .plan-views{margin-bottom:18px}

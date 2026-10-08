@@ -126,10 +126,10 @@ the source files.
 
 ## Gym check-in QR codes
 
-The gym check-in feature (a saved membership code shown as a QR code on the phone, added by
-typing, importing a photo, or scanning with the camera) uses three third-party packages. All are
-permissively licensed and compatible with openGym's AGPL, and all load on demand: the QR renderer
-and the browser decoder only when a card is shown or scanned, the ML Kit plugin only in the
+The gym check-in feature (a saved membership code shown as a QR code or a barcode on the phone,
+added by importing a photo or scanning with the camera) uses five third-party packages. All are
+permissively licensed and compatible with openGym's AGPL, and all load on demand: the renderers
+and the browser decoders only when a card is shown or scanned, the ML Kit plugin only in the
 Android/iOS app.
 
 ### QR/barcode rendering — `lean-qr`
@@ -163,13 +163,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### Camera scan & photo decode in the browser — `jsQR`
+### Barcode rendering — `jsbarcode`
+
+Cards that carry a plain (1D) barcode — Code 128, Code 39, Code 93, Codabar, EAN-13/8, UPC-A,
+ITF — are redrawn with the encoders of [**JsBarcode**](https://github.com/lindell/JsBarcode) by
+Johan Lindell, used under the **MIT License** (text in the package's own `MIT-LICENSE.txt`; same terms as
+lean-qr's above). Only its encoders are used; openGym paints the bars itself. As with QR codes,
+only the code's value and format are stored.
+
+### Camera scan & photo decode in the browser — `zxing-wasm`
+
+In a browser (including the installed PWA), reading a QR code or a barcode from the camera or an
+imported photo uses [**zxing-wasm**](https://github.com/Sec-ant/zxing-wasm) by Ze-Zheng Wu, under
+the **MIT License**, a WebAssembly build of [**zxing-cpp**](https://github.com/zxing-cpp/zxing-cpp)
+under the **Apache License 2.0** (text at <https://www.apache.org/licenses/LICENSE-2.0>). Only its
+reader is bundled. The `.wasm` file is served from the openGym instance itself, never from a CDN.
+Where the browser has a native `BarcodeDetector`, that is tried first.
+
+### Camera scan & photo decode in the browser, fallback — `jsQR`
 
 In a browser (including the installed PWA), reading a code from the camera or from an imported
 photo uses [**jsQR**](https://github.com/cozmo/jsQR) by Cosmo Wolfe, under the **Apache License
 2.0** (text at <https://www.apache.org/licenses/LICENSE-2.0> and in the package's own `LICENSE`).
-Where the browser has a native `BarcodeDetector`, that is tried first and jsQR is the fallback.
-Video frames are decoded in memory and never uploaded or stored.
+It reads QR codes only, and is used when zxing-wasm cannot be loaded (offline before the first
+scan, say). Video frames are decoded in memory and never uploaded or stored.
 
 ### Camera scan & photo decode in the app — `@capacitor-mlkit/barcode-scanning`
 

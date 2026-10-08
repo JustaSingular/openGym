@@ -5,7 +5,7 @@ import { Button } from '../components/ui.jsx'
 
 // Live camera scanner for the browser/PWA (the app build uses ML Kit's own UI instead — see
 // lib/scan.js). Opens the rear camera into a <video>, decodes a frame every ~150 ms until a QR
-// shows up, then hands { value, fmt } to onFound. Cancel (or unmount) stops the camera.
+// code or barcode shows up, then hands { value, fmt } to onFound. Cancel (or unmount) stops the camera.
 //
 // Errors are shown in place rather than thrown: a denied permission or a browser without
 // getUserMedia leaves the sheet up with a message, and the add-card form underneath still offers
@@ -62,7 +62,7 @@ export default function CameraScan({ onFound, onCancel }) {
             <video ref={videoRef} playsInline muted autoPlay />
             <div className="cam-frame" aria-hidden="true" />
           </div>
-          <div className="muted small" style={{ textAlign: 'center', margin: '12px 0 16px' }}>{t('Point the camera at the QR code')}</div>
+          <div className="muted small" style={{ textAlign: 'center', margin: '12px 0 16px' }}>{t('Point the camera at the code')}</div>
         </>}
     <Button variant="tinted" onClick={onCancel}>{t('Cancel')}</Button>
   </>
